@@ -33,4 +33,7 @@ public interface StmtVisitor<P, R> {
 
 	R visit(OrtStmt stmt, P param);
 
+	R visit(AtMostStmt atMostStmt, P param);
+
+	R visit(ExactlyStmt exactlyStmt, P param);
 }

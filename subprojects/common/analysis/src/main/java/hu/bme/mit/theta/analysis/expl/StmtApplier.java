@@ -62,6 +62,12 @@ final class StmtApplier {
 		} else if (stmt instanceof OrtStmt) {
 			final OrtStmt ortStmt = (OrtStmt) stmt;
 			return applyOrt(ortStmt, val, approximate);
+		} else if (stmt instanceof AtMostStmt) {
+			final AtMostStmt atMostStmt = (AtMostStmt) stmt;
+			return applyAtMost(atMostStmt, val, approximate);
+		} else if (stmt instanceof ExactlyStmt) {
+			final ExactlyStmt exactlyStmt = (ExactlyStmt) stmt;
+			return applyExactly(exactlyStmt, val, approximate);
 		} else {
 			throw new UnsupportedOperationException("Unhandled statement: " + stmt);
 		}
@@ -152,6 +158,26 @@ final class StmtApplier {
 		final VarDecl<?> varDecl = stmt.getVarDecl();
 		val.remove(varDecl);
 		return ApplyResult.SUCCESS;
+	}
+
+	private static ApplyResult applyAtMost(final AtMostStmt stmt, final MutableValuation val, final boolean approximate) {
+		if(approximate){
+			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
+				val.remove(varDecl);
+			}
+			return ApplyResult.SUCCESS;
+		} else return ApplyResult.FAILURE;
+
+	}
+
+	private static ApplyResult applyExactly(final ExactlyStmt stmt, final MutableValuation val, final boolean approximate) {
+		if(approximate){
+			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
+				val.remove(varDecl);
+			}
+			return ApplyResult.SUCCESS;
+		} else return ApplyResult.FAILURE;
+
 	}
 
 	private static ApplyResult applySkip() {

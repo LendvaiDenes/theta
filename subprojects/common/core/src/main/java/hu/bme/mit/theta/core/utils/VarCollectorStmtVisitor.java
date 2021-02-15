@@ -59,6 +59,20 @@ final class VarCollectorStmtVisitor implements StmtVisitor<Collection<VarDecl<?>
 	}
 
 	@Override
+	public Void visit(final AtMostStmt stmt, final Collection<VarDecl<?>> vars) {
+		vars.addAll(stmt.getVarDecls());
+		ExprUtils.collectVars(stmt.getSum(),vars);
+		return null;
+	}
+
+	@Override
+	public Void visit(final ExactlyStmt stmt, final Collection<VarDecl<?>> vars) {
+		vars.addAll(stmt.getVarDecls());
+		ExprUtils.collectVars(stmt.getSum(),vars);
+		return null;
+	}
+
+	@Override
 	public Void visit(SequenceStmt stmt, Collection<VarDecl<?>> vars) {
 		for (Stmt subStmt : stmt.getStmts()) {
 			subStmt.accept(VarCollectorStmtVisitor.getInstance(), vars);

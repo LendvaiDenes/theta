@@ -27,6 +27,14 @@ public class StmtCounterVisitor implements StmtVisitor<Void, Integer> {
 	}
 
 	@Override
+	public Integer visit(AtMostStmt stmt, Void param) {
+		return 1;
+	}
+
+	@Override
+	public Integer visit(ExactlyStmt exactlyStmt, Void param) { return 1; }
+
+	@Override
 	public <DeclType extends Type> Integer visit(AssignStmt<DeclType> stmt, Void param) {
 		return 1;
 	}

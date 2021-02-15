@@ -9,6 +9,8 @@ xsts:
     PROP LCURLY prop=expr RCURLY;
 
 action:
+    atMostAction|
+    exactlyAction|
     assumeAction|
     assignAction|
     havocAction|
@@ -42,6 +44,14 @@ nonDet:
 
 sequentialAction:
     (actions+=action)*;
+
+atMostAction:
+    ATMOST sum=expr FROM LCURLY vars+=ID (COMMA vars+=ID)* RCURLY SEMICOLON
+;
+
+exactlyAction:
+    EXACTLY sum=expr FROM LCURLY vars+=ID (COMMA vars+=ID)* RCURLY SEMICOLON
+;
 
 assumeAction:
     ASSUME cond=expr SEMICOLON;
@@ -183,6 +193,9 @@ TRAN: 'trans';
 INIT: 'init';
 ENV: 'env';
 PROP: 'prop';
+ATMOST: 'at-most';
+EXACTLY: 'exactly';
+FROM: 'from';
 HAVOC: 'havoc';
 CHOICE: 'choice';
 NONDET_OR: 'or';

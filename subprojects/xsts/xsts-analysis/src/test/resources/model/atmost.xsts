@@ -1,0 +1,10 @@
+var a: boolean = false
+var b: boolean = false
+
+trans {
+    at-most 1 from {a,b};
+}
+
+env {}
+
+init {}

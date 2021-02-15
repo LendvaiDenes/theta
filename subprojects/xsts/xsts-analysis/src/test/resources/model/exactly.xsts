@@ -1,0 +1,10 @@
+var a: boolean = true
+var b: boolean = true
+
+trans {
+    exactly 2 from {a,b};
+}
+
+env {}
+
+init {}

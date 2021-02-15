@@ -15,10 +15,12 @@
  */
 package hu.bme.mit.theta.core.utils;
 
-import static hu.bme.mit.theta.core.type.abstracttype.AbstractExprs.Eq;
+import static hu.bme.mit.theta.core.type.abstracttype.AbstractExprs.*;
 import static hu.bme.mit.theta.core.type.anytype.Exprs.Prime;
 import static hu.bme.mit.theta.core.type.booltype.BoolExprs.*;
+import static hu.bme.mit.theta.core.type.inttype.IntExprs.Add;
 import static hu.bme.mit.theta.core.type.inttype.IntExprs.Int;
+import static hu.bme.mit.theta.core.utils.TypeUtils.cast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,15 +30,7 @@ import java.util.Set;
 import com.google.common.collect.ImmutableList;
 
 import hu.bme.mit.theta.core.decl.VarDecl;
-import hu.bme.mit.theta.core.stmt.AssignStmt;
-import hu.bme.mit.theta.core.stmt.AssumeStmt;
-import hu.bme.mit.theta.core.stmt.HavocStmt;
-import hu.bme.mit.theta.core.stmt.NonDetStmt;
-import hu.bme.mit.theta.core.stmt.OrtStmt;
-import hu.bme.mit.theta.core.stmt.SequenceStmt;
-import hu.bme.mit.theta.core.stmt.SkipStmt;
-import hu.bme.mit.theta.core.stmt.Stmt;
-import hu.bme.mit.theta.core.stmt.StmtVisitor;
+import hu.bme.mit.theta.core.stmt.*;
 import hu.bme.mit.theta.core.type.Expr;
 import hu.bme.mit.theta.core.type.Type;
 import hu.bme.mit.theta.core.type.booltype.BoolType;
@@ -82,6 +76,32 @@ final class StmtToExprTransformer {
 			final Expr<BoolType> cond = stmt.getCond();
 			final Expr<BoolType> expr = ExprUtils.applyPrimes(cond, indexing);
 			return StmtUnfoldResult.of(ImmutableList.of(expr), indexing);
+		}
+
+		@Override
+		public StmtUnfoldResult visit(final AtMostStmt stmt, final VarIndexing indexing) {
+			final List<Expr<IntType>> ifExprs = new ArrayList<>();
+			VarIndexing newIndexing = indexing;
+			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
+				ifExprs.add(cast(Ite(varDecl.getRef(),Int(1),Int(0)),Int()));
+				newIndexing = newIndexing.inc(varDecl);
+			}
+			final Expr<IntType> addExpr = Add(ifExprs);
+			final Expr<BoolType> expr = Leq(addExpr,stmt.getSum());
+			return StmtUnfoldResult.of(ImmutableList.of(expr), newIndexing);
+		}
+
+		@Override
+		public StmtUnfoldResult visit(ExactlyStmt stmt, VarIndexing indexing) {
+			final List<Expr<IntType>> ifExprs = new ArrayList<>();
+			VarIndexing newIndexing = indexing;
+			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
+				ifExprs.add(cast(Ite(varDecl.getRef(),Int(1),Int(0)),Int()));
+				newIndexing = newIndexing.inc(varDecl);
+			}
+			final Expr<IntType> addExpr = Add(ifExprs);
+			final Expr<BoolType> expr = Eq(addExpr,stmt.getSum());
+			return StmtUnfoldResult.of(ImmutableList.of(expr), newIndexing);
 		}
 
 		@Override

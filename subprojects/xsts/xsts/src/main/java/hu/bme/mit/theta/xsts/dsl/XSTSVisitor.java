@@ -7,16 +7,12 @@ import hu.bme.mit.theta.core.dsl.ParseException;
 import hu.bme.mit.theta.core.stmt.*;
 import hu.bme.mit.theta.core.type.Expr;
 import hu.bme.mit.theta.core.type.Type;
-import hu.bme.mit.theta.core.type.arraytype.ArrayReadExpr;
 import hu.bme.mit.theta.core.type.arraytype.ArrayType;
-import hu.bme.mit.theta.core.type.arraytype.ArrayWriteExpr;
 import hu.bme.mit.theta.core.type.booltype.BoolType;
 import hu.bme.mit.theta.core.type.inttype.IntType;
-import hu.bme.mit.theta.core.utils.TypeUtils;
 import hu.bme.mit.theta.xsts.XSTS;
 import hu.bme.mit.theta.xsts.dsl.gen.XstsDslBaseVisitor;
 import hu.bme.mit.theta.xsts.dsl.gen.XstsDslParser;
-import org.antlr.v4.codegen.model.decl.Decl;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -398,6 +394,8 @@ public class XSTSVisitor extends XstsDslBaseVisitor<Expr<?>> {
 		else if (ctx.havocAction() != null) return processHavocAction(ctx.havocAction());
 		else if (ctx.nonDetAction() != null) return processNonDet(ctx.nonDetAction().nonDet());
 		else if (ctx.ortAction() != null) return processOrt(ctx.ortAction());
+		else if (ctx.atMostAction() != null) return processAtMostAction(ctx.atMostAction());
+		else if (ctx.exactlyAction() != null) return processExactlyAction(ctx.exactlyAction());
 		else return SkipStmt.getInstance();
 	}
 
@@ -415,6 +413,32 @@ public class XSTSVisitor extends XstsDslBaseVisitor<Expr<?>> {
 			choices.add(processSequentialAction(seq));
 		}
 		return NonDetStmt.of(choices);
+	}
+
+	public AtMostStmt processAtMostAction(XstsDslParser.AtMostActionContext ctx) {
+		final List<VarDecl<BoolType>> varDecls = new ArrayList<>();
+		for(var id:ctx.vars){
+			if (!nameToDeclMap.containsKey(id.getText())) {
+				throw new ParseException(ctx, "Could not resolve variable '" + id.getText() + "'");
+			} else {
+				varDecls.add(cast(nameToDeclMap.get(id.getText()),Bool()));
+			}
+		}
+		final Expr<IntType> sumExpr = cast(visitExpr(ctx.sum),Int());
+		return AtMostStmt.of(varDecls,sumExpr);
+	}
+
+	public ExactlyStmt processExactlyAction(XstsDslParser.ExactlyActionContext ctx) {
+		final List<VarDecl<BoolType>> varDecls = new ArrayList<>();
+		for(var id:ctx.vars){
+			if (!nameToDeclMap.containsKey(id.getText())) {
+				throw new ParseException(ctx, "Could not resolve variable '" + id.getText() + "'");
+			} else {
+				varDecls.add(cast(nameToDeclMap.get(id.getText()),Bool()));
+			}
+		}
+		final Expr<IntType> sumExpr = cast(visitExpr(ctx.sum),Int());
+		return ExactlyStmt.of(varDecls,sumExpr);
 	}
 
 	public SequenceStmt processSequentialAction(XstsDslParser.SequentialActionContext ctx) {

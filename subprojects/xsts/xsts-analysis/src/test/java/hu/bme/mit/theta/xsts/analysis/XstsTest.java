@@ -206,8 +206,19 @@ public class XstsTest {
 
 				{ "src/test/resources/model/array_constant.xsts", "src/test/resources/property/array_constant.prop", true, XstsConfigBuilder.Domain.PROD},
 
-				{ "src/test/resources/model/array_constant.xsts", "src/test/resources/property/array_constant.prop", true, XstsConfigBuilder.Domain.PROD_AUTO}
+				{ "src/test/resources/model/array_constant.xsts", "src/test/resources/property/array_constant.prop", true, XstsConfigBuilder.Domain.PROD_AUTO},
 
+				{"src/test/resources/model/atmost.xsts", "src/test/resources/model/atmost.prop", true, XstsConfigBuilder.Domain.PRED_CART},
+
+				{"src/test/resources/model/atmost.xsts", "src/test/resources/model/atmost.prop", true, XstsConfigBuilder.Domain.EXPL},
+
+				{"src/test/resources/model/atmost.xsts", "src/test/resources/model/atmost.prop", true, XstsConfigBuilder.Domain.PROD_AUTO},
+
+				{"src/test/resources/model/exactly.xsts", "src/test/resources/model/exactly.prop", true, XstsConfigBuilder.Domain.PRED_CART},
+
+				{"src/test/resources/model/exactly.xsts", "src/test/resources/model/exactly.prop", true, XstsConfigBuilder.Domain.EXPL},
+
+				{"src/test/resources/model/exactly.xsts", "src/test/resources/model/exactly.prop", true, XstsConfigBuilder.Domain.PROD_AUTO}
 		});
 	}
 
