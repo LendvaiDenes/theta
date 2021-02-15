@@ -83,8 +83,8 @@ final class StmtToExprTransformer {
 			final List<Expr<IntType>> ifExprs = new ArrayList<>();
 			VarIndexing newIndexing = indexing;
 			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
-				ifExprs.add(cast(Ite(varDecl.getRef(),Int(1),Int(0)),Int()));
 				newIndexing = newIndexing.inc(varDecl);
+				ifExprs.add(cast(Ite(ExprUtils.applyPrimes(varDecl.getRef(),newIndexing),Int(1),Int(0)),Int()));
 			}
 			final Expr<IntType> addExpr = Add(ifExprs);
 			final Expr<BoolType> expr = Leq(addExpr,stmt.getSum());
@@ -96,8 +96,8 @@ final class StmtToExprTransformer {
 			final List<Expr<IntType>> ifExprs = new ArrayList<>();
 			VarIndexing newIndexing = indexing;
 			for(VarDecl<BoolType> varDecl: stmt.getVarDecls()){
-				ifExprs.add(cast(Ite(varDecl.getRef(),Int(1),Int(0)),Int()));
 				newIndexing = newIndexing.inc(varDecl);
+				ifExprs.add(cast(Ite(ExprUtils.applyPrimes(varDecl.getRef(),newIndexing),Int(1),Int(0)),Int()));
 			}
 			final Expr<IntType> addExpr = Add(ifExprs);
 			final Expr<BoolType> expr = Eq(addExpr,stmt.getSum());

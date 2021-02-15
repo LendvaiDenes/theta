@@ -5,6 +5,6 @@ trans {
     at-most 1 from {a,b};
 }
 
-env {}
-
 init {}
+
+env {}

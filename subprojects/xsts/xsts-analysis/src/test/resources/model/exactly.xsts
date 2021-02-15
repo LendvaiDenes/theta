@@ -5,6 +5,6 @@ trans {
     exactly 2 from {a,b};
 }
 
-env {}
-
 init {}
+
+env {}
