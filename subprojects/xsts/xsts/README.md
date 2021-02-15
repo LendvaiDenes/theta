@@ -87,8 +87,8 @@ The behaviour of XSTSs can be described using transitions. A transition is an at
     * assumptions of the form `assume <expr>`, where `<expr>` is a boolean expression
     * havocs of the form `havoc <varname>`
     * nondeterministic assignments to groups of boolean variables:
-        * `at-most <k> from {<var_1>,<var_2>, ... ,<var_n>}` assigns the value `true` to at-most `k` of the variables `<var_1>,<var_2>, ... ,<var_n>` and `false` to the rest
-        * `exactly <k> from {<var_1>,<var_2>, ... ,<var_n>}` assigns the value `true` to exactly `k` of the variables `<var_1>,<var_2>, ... ,<var_n>` and `false` to the rest 
+        * `at-most <k> from {<var_1>,<var_2>, ... ,<var_n>}` assigns the value `true` to at-most `k` of the listed variables and `false` to the rest
+        * `exactly <k> from {<var_1>,<var_2>, ... ,<var_n>}` assigns the value `true` to exactly `k` of the listed variables and `false` to the rest 
 * composite statements:
     * nondeterministic choices of the form `choice { <statement> } or { <statement> }`, with 1 or more branches
     * sequences of the form `<statement> <statement> <statement>`
